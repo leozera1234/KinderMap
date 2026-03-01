@@ -4,6 +4,7 @@ import PackageDescription
 let package = Package(
     name: "KinderMap",
     platforms: [
+        .iOS(.v16),
         .macOS(.v13)
     ],
     products: [

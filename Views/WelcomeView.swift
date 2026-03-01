@@ -5,65 +5,84 @@ struct WelcomeView: View {
     var namespace: Namespace.ID
 
     var body: some View {
-        VStack(spacing: 24) {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("KinderMap")
-                    .font(.system(.largeTitle, design: .rounded, weight: .bold))
-                    .matchedGeometryEffect(id: "title", in: namespace)
-
-                Text("Um mapa gentil do desenvolvimento da sua criança.")
-                    .font(.system(.body, design: .rounded))
-                    .foregroundStyle(.secondary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            ZStack {
-                RoundedRectangle(cornerRadius: 32, style: .continuous)
-                    .fill(
-                        LinearGradient(colors: [
-                            Color.blue.opacity(0.2),
-                            Color.purple.opacity(0.15)
-                        ], startPoint: .topLeading, endPoint: .bottomTrailing)
-                    )
-                    .shadow(color: Color.black.opacity(0.08), radius: 16, x: 0, y: 8)
-
-                VStack(spacing: 16) {
-                    HStack(spacing: 12) {
+        ZStack {
+            DesignSystem.Colors.background.ignoresSafeArea()
+            
+            VStack(spacing: 32) {
+                Spacer()
+                
+                // Hero Section
+                VStack(spacing: 20) {
+                    ZStack {
                         Circle()
-                            .fill(Color.blue.opacity(0.8))
-                            .frame(width: 16, height: 16)
-                        Circle()
-                            .fill(Color.orange.opacity(0.8))
-                            .frame(width: 12, height: 12)
-                        Circle()
-                            .strokeBorder(Color.white.opacity(0.9), lineWidth: 2)
-                            .background(Circle().fill(Color.pink.opacity(0.8)))
-                            .frame(width: 20, height: 20)
-                        Spacer()
+                            .fill(DesignSystem.Colors.primary.opacity(0.1))
+                            .frame(width: 120, height: 120)
+                        
+                        Image(systemName: "hand.raised.fill")
+                            .font(.system(size: 60))
+                            .foregroundColor(DesignSystem.Colors.primary)
                     }
-
-                    Text("Visualize, em poucos minutos, como a sua criança está se desenvolvendo em diferentes domínios.")
-                        .font(.system(.callout, design: .rounded))
-                        .foregroundStyle(.primary)
-                        .multilineTextAlignment(.leading)
-
-                    Text("Este não é um diagnóstico, mas um ponto de partida para observar, acolher e apoiar.")
-                        .font(.system(.caption, design: .rounded))
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.leading)
+                    
+                    VStack(spacing: 8) {
+                        Text("KinderMap")
+                            .font(.system(size: 40, weight: .black, design: .rounded))
+                            .foregroundColor(DesignSystem.Colors.textPrimary)
+                            .matchedGeometryEffect(id: "title", in: namespace)
+                        
+                        Text("Acompanhe cada passo do desenvolvimento com carinho e precisão.")
+                            .font(.system(size: 18, weight: .medium, design: .rounded))
+                            .foregroundColor(DesignSystem.Colors.textSecondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                    }
                 }
-                .padding(24)
+                
+                // Info Cards
+                VStack(spacing: 16) {
+                    FeatureRow(icon: "chart.bar.fill", title: "Análise Profissional", description: "Baseado em marcos reais de crescimento.")
+                    FeatureRow(icon: "heart.fill", title: "Feito para Pais", description: "Interface simples e acolhedora.")
+                }
+                .padding(.horizontal)
+                
+                Spacer()
+                
+                PrimaryButton(title: "Começar Avaliação") {
+                    onStart()
+                }
+                .matchedGeometryEffect(id: "primaryButton", in: namespace)
+                .padding(.horizontal)
+                .padding(.bottom, 40)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 220)
-
-            Spacer()
-
-            PrimaryButton(title: "Começar") {
-                onStart()
-            }
-            .matchedGeometryEffect(id: "primaryButton", in: namespace)
         }
     }
 }
 
+struct FeatureRow: View {
+    let icon: String
+    let title: String
+    let description: String
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .font(.system(size: 24))
+                .foregroundColor(DesignSystem.Colors.secondary)
+                .frame(width: 44, height: 44)
+                .background(DesignSystem.Colors.secondary.opacity(0.1))
+                .cornerRadius(12)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                Text(description)
+                    .font(.system(size: 14))
+                    .foregroundColor(DesignSystem.Colors.textSecondary)
+            }
+            Spacer()
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.04), radius: 10, x: 0, y: 4)
+    }
+}

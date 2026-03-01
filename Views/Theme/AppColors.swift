@@ -7,6 +7,10 @@ import UIKit
 #endif
 
 extension Color {
+    static let appPrimary = Color(red: 0.25, green: 0.32, blue: 0.71) // Deep Indigo
+    static let appSecondary = Color(red: 0.14, green: 0.64, blue: 0.61) // Teal
+    static let appAccent = Color(red: 0.96, green: 0.44, blue: 0.51) // Rose
+
     static var appSystemBackground: Color {
         #if os(macOS)
         return Color(nsColor: .windowBackgroundColor)

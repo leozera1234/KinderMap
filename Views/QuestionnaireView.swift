@@ -4,73 +4,95 @@ struct QuestionnaireView: View {
     @ObservedObject var viewModel: KinderMapViewModel
 
     var body: some View {
-        VStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Observações do dia a dia")
-                    .font(.system(.title2, design: .rounded, weight: .semibold))
-
-                Text("Marque o que costuma acontecer com mais frequência com a sua criança.")
-                    .font(.system(.subheadline, design: .rounded))
-                    .foregroundStyle(.secondary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            ScrollView {
-                VStack(spacing: 18) {
-                    ForEach(DevelopmentDomain.allCases) { domain in
-                        if let questions = viewModel.questionsByDomain[domain] {
-                            DomainSectionView(domain: domain,
-                                              questions: questions,
-                                              answers: $viewModel.answers)
+        ZStack {
+            DesignSystem.Colors.background.ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Custom Header
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Avaliação")
+                            .font(.system(size: 24, weight: .bold, design: .rounded))
+                        Text(viewModel.child.name)
+                            .font(.subheadline)
+                            .foregroundColor(DesignSystem.Colors.primary)
+                    }
+                    Spacer()
+                }
+                .padding()
+                .background(Color.white)
+                
+                ScrollView {
+                    VStack(spacing: 24) {
+                        ForEach(DevelopmentDomain.allCases) { domain in
+                            if let questions = viewModel.questionsByDomain[domain] {
+                                DomainCard(domain: domain, questions: questions, answers: $viewModel.answers)
+                            }
                         }
                     }
+                    .padding()
                 }
-                .padding(.vertical, 4)
-            }
-
-            PrimaryButton(title: "Ver análise") {
-                withAnimation(.spring(response: 0.45, dampingFraction: 0.9)) {
-                    viewModel.goToNextStep()
+                
+                PrimaryButton(title: "Ver Resultados") {
+                    withAnimation(.spring(response: 0.45, dampingFraction: 0.9)) {
+                        viewModel.goToNextStep()
+                    }
                 }
+                .padding()
+                .background(Color.white)
             }
-            .padding(.top, 4)
         }
+        .navigationBarHidden(true)
     }
 }
 
-struct DomainSectionView: View {
+struct DomainCard: View {
     let domain: DevelopmentDomain
     let questions: [DomainQuestion]
     @Binding var answers: [UUID: Bool]
-
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text(domain.rawValue)
-                    .font(.system(.headline, design: .rounded))
+                    .font(.system(size: 18, weight: .black, design: .rounded))
+                    .foregroundColor(domain.color)
+                    .tracking(1.5)
                 Spacer()
-                Capsule()
-                    .fill(domain.color.opacity(0.2))
-                    .frame(width: 56, height: 8)
+                Image(systemName: iconFor(domain))
+                    .foregroundColor(domain.color)
             }
-
-            ForEach(questions) { question in
-                Toggle(isOn: Binding(
-                    get: { answers[question.id] ?? false },
-                    set: { answers[question.id] = $0 }
-                )) {
-                    Text(question.text)
-                        .font(.system(.subheadline, design: .rounded))
-                        .foregroundStyle(.primary)
+            
+            Divider()
+            
+            VStack(spacing: 2) {
+                ForEach(questions) { question in
+                    Toggle(isOn: Binding(
+                        get: { answers[question.id] ?? false },
+                        set: { answers[question.id] = $0 }
+                    )) {
+                        Text(question.text)
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundColor(DesignSystem.Colors.textPrimary)
+                    }
+                    .padding(.vertical, 12)
+                    .toggleStyle(SwitchToggleStyle(tint: domain.color))
+                    
+                    if question.id != questions.last?.id {
+                        Divider().opacity(0.5)
+                    }
                 }
-                .toggleStyle(SwitchToggleStyle(tint: domain.color))
             }
         }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color.appSecondaryBackground.opacity(0.95))
-        )
+        .premiumCard()
+    }
+    
+    private func iconFor(_ domain: DevelopmentDomain) -> String {
+        switch domain {
+        case .motor: return "figure.walk"
+        case .language: return "bubble.left.fill"
+        case .social: return "person.2.fill"
+        case .cognition: return "brain.fill"
+        }
     }
 }
-

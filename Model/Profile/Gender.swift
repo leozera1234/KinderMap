@@ -1,10 +1,10 @@
 import Foundation
 
 enum Gender: String, CaseIterable, Identifiable {
-    case female = "Female"
-    case male = "Male"
-    case unspecified = "I don't want to inform"
+    case female = "Feminino"
+    case male = "Masculino"
+    case other = "Outro"
+    case unspecified = "Não informado"
 
     var id: String { rawValue }
 }
-
