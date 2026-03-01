@@ -7,4 +7,3 @@ struct DomainScore: Identifiable {
     let level: String
     let guidance: String
 }
-

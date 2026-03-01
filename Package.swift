@@ -14,7 +14,7 @@ let package = Package(
             name: "KinderMap",
             path: ".",
             exclude: ["README.md", ".vscode"],
-            sources: ["App", "Model", "ViewModel", "Views"]
+            sources: ["App", "Model", "Protocol", "Services", "ViewModel", "Views", "Resources"]
         )
     ]
 )
