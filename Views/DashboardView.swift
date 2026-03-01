@@ -11,8 +11,9 @@ struct DashboardView: View {
                     .font(.system(.title2, design: .rounded, weight: .semibold))
                     .matchedGeometryEffect(id: "title", in: namespace)
 
-                if !viewModel.child.name.isEmpty {
-                    Text(viewModel.child.name)
+                let childName = viewModel.child.name
+                if !childName.isEmpty {
+                    Text(childName)
                         .font(.system(.callout, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
@@ -26,7 +27,7 @@ struct DashboardView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             } else {
                 RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .fill(Color(.secondarySystemBackground).opacity(0.95))
+                    .fill(Color.appSecondaryBackground.opacity(0.95))
                     .overlay(
                         VStack(spacing: 16) {
                             ForEach(viewModel.scores) { item in
@@ -77,7 +78,7 @@ struct DashboardRow: View {
             GeometryReader { proxy in
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .fill(Color(.tertiarySystemFill))
+                        .fill(Color.appTertiaryFill)
                     Capsule()
                         .fill(score.domain.color.gradient)
                         .frame(width: proxy.size.width * max(0.05, CGFloat(score.score)))

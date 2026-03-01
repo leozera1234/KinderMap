@@ -12,7 +12,9 @@ struct PrimaryButton: View {
                 isPressed = true
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                isPressed = false
+                withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
+                    isPressed = false
+                }
                 action()
             }
         }) {
